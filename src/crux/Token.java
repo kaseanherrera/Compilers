@@ -34,6 +34,7 @@ public class Token {
 		SEMICOLON(";"),
 		COLON(":"),
 		CALL("::"),
+		EQUAL("=="),
 		
 		IDENTIFIER(),
 		INTEGER(),
@@ -136,6 +137,8 @@ public class Token {
 				return;
 			case "/": this.kind = Kind.DIV;
 				return;
+			case "==" : this.kind = Kind.EQUAL;
+				return;
 			case ">" : this.kind = Kind.GREATER_THEN;
 				return;
 			case "<" : this.kind = Kind.LESS_THAN;
@@ -149,6 +152,8 @@ public class Token {
 			case ":" : this.kind = Kind.COLON;
 				return;
 			case "::" : this.kind = Kind.CALL;
+				return;
+			case "EOF" : this.kind = Kind.EOF;
 				return;
 			}
 		
@@ -230,8 +235,11 @@ public class Token {
 	
 	public String toString()
 	{
-		// TODO: implement this
-		return "Not Yet Implemented";
+		StringBuilder str = new StringBuilder();
+		str.append(this.kind.toString()); //kind
+		str.append('(' + this.lexeme + ')'); //lexeme
+		str.append("(lineNum :" + this.lineNumber() + ", " + this.charPos + ')'); //line number and postion 
+		return str.toString();
 	}
 	
 	
