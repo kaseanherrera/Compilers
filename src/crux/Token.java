@@ -1,6 +1,9 @@
 package crux;
 
 public class Token {
+	String stringMatch = "\\d+";
+	String numberMatch = "(?:\\d+)\\.?\\d*";
+	String identifierMatch = "[a-zA-Z]+";
 	
 	public static enum Kind {
 		AND("and"),
@@ -72,7 +75,7 @@ public class Token {
 	private String lexeme = "";
 	
 
-	private Token(int lineNum, int charPos)
+	public Token(int lineNum, int charPos)
 	{
 		this.lineNum = lineNum;
 		this.charPos = charPos;
@@ -153,8 +156,7 @@ public class Token {
 				return;
 			case "::" : this.kind = Kind.CALL;
 				return;
-			case "EOF" : this.kind = Kind.EOF;
-				return;
+			
 			}
 		
 			if(isInteger(lexeme))
@@ -163,8 +165,9 @@ public class Token {
 				this.kind = Kind.FLOAT;
 			else if(isIdentifier(lexeme))
 				this.kind = Kind.IDENTIFIER;
-			else
+			else{
 				this.kind = Kind.ERROR;
+			}	
 	}
 	
 	public int lineNumber()
@@ -186,51 +189,18 @@ public class Token {
 	//returns true is the input is an Integer
 	public boolean isInteger(String input){
 		//check if any character is not an integer
-		for(int index = 0 ; index < input.length() ; index++){
-			if(!Character.isDigit(input.charAt(index)))
-				return false;
-		}
-		return true;
+		return input.matches(stringMatch);
 	}
 	
 	//return true if string represents a float 
 	public boolean isFloat(String input){
-		//if the first character is not a digit return false
-		if(!Character.isDigit(input.charAt(0)))
-				return false;
-		//there should only be one period
-		int periodCount = 0;
-		
-		for(int index = 0; index < input.length(); index++){
-			//if it is not a digit, check if it is a period, else return false
-			if(!Character.isDigit(input.charAt(index))){
-				if(input.charAt(index) == '.'){
-					periodCount++;
-				}else{
-					return false;
-				}
-			}
-		}
-		//if period count it not 1 then it is not a float
-		if(periodCount != 1)
-			return false;
-		
-		return true;
+		//if the input is a number and contains a period
+		return (input.matches(numberMatch) && input.contains("."));
 	}
 	
 	//check if the input is an Identifier
 	public boolean isIdentifier(String input){
-		//the first one has to be a letter a '_'
-		if(!Character.isLetter(input.charAt(0)) && input.charAt(0) != '_')
-			return false;
-		//everything after can be a letter or '_'
-		for(int index = 0; index < input.length() ; index++){
-			Character currentC = input.charAt(index);
-			//if it is not a letter, Digit or '_' return false
-			if(!Character.isLetterOrDigit(currentC) && currentC!='_')
-				return false;
-		}
-		return true;
+		return input.matches(identifierMatch);
 	}
 	
 	public String toString()
@@ -238,7 +208,7 @@ public class Token {
 		StringBuilder str = new StringBuilder();
 		str.append(this.kind.toString()); //kind
 		str.append('(' + this.lexeme + ')'); //lexeme
-		str.append("(lineNum :" + this.lineNumber() + ", " + this.charPos + ')'); //line number and postion 
+		str.append("(lineNum :" + this.lineNumber() + ", " + "charPos:" + this.charPos + ')'); //line number and postion 
 		return str.toString();
 	}
 	
@@ -248,6 +218,7 @@ public class Token {
 	{
 		Token tok = new Token(linePos, charPos);
 		tok.kind = Kind.EOF;
+		tok.lexeme = "EOF";
 		return tok;
 	}
 	

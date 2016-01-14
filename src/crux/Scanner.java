@@ -9,11 +9,11 @@ public class Scanner implements Iterable<Token> {
 	public static String uciNetID = "kaseanh";
 	//String charMatches = "(|)|{|}|[|]|+|-|*|/|>|<|=|,|:";
 	boolean go;
-	String charMatches = "==|=|^[0-9]"; //string that match basic characters
-	String ignoreChars = "\n";
+	String charMatches = "([-()@'~%<>=:,/.=\\\"!/-;][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
+	String ignoreChars = "\n| ";
 	public StringBuilder masterStr;
 	private String lastMatch; //tracks the last match that we had
-	
+	boolean updateLineNumber;
 	private int lineNum;  // current line count
 	private int charPos;  // character offset for current line
 	private int nextChar; // contains the next char (-1 == EOF)
@@ -27,12 +27,11 @@ public class Scanner implements Iterable<Token> {
 	Scanner(Reader reader)
 	{
 		//initialize the Scanner
-		this.lineNum  = 0;
+		this.lineNum  = 1;
 		this.input = reader;
-		
+		updateLineNumber = false;
 		go = true;
 		masterStr = new StringBuilder();
-		//readChar();
 
 		this.lastMatch = "";
 		lastMarkedPosition = 0;
@@ -46,10 +45,9 @@ public class Scanner implements Iterable<Token> {
 	
 	private int readChar() {
 		//if we are at the end of buffer , get char from file
-		
 		if(bufferStringPosition == masterStr.toString().length()){
 			try{
-				//get the next char. If there is a new line, add to the line number, and reset position 
+				//get the next char
 				nextChar = input.read();
 				nextCharString = Character.toString((char)nextChar);
 				//add the next char to the string if it is not in list of ignore characters 
@@ -66,12 +64,18 @@ public class Scanner implements Iterable<Token> {
 		}
 		
 		if(nextChar == '\n'){
-			lineNum++;
-			charPos = 0;   
+			updateLineNumber = true;  
 		}else{
 			//add to the current Pos 
-			charPos++;
-			bufferStringPosition++;
+		//	charPos++;
+			if(!nextCharString.matches(ignoreChars))
+				bufferStringPosition++;
+		}
+		
+		if(updateLineNumber){
+			lineNum++;
+			charPos = 0;
+			updateLineNumber = false;
 		}
 		return nextChar;
 		
@@ -86,14 +90,11 @@ public class Scanner implements Iterable<Token> {
 
 	public Token next()
 	{		
-	
 		//get go 
 		go = true;
-	
 		while(go){
 			//get the next character 
 			readChar();
-			
 			//check if the next char is one of the 'basic kinds' stop and tokenize
 			if((masterStr.toString()).matches(charMatches)){
 				//set the last match to the currentString
@@ -104,36 +105,50 @@ public class Scanner implements Iterable<Token> {
 			
 			//if it matches any of the ignore characters, move on 
 			else if((nextCharString).matches(ignoreChars)){
-				readChar();
+				//readChar();
 			}
 			//does not match anything
 			else{
-				go = false;
-				//set char postion back to last place we match 
-				charPos = this.lastMarkedPosition;
-				//delete the matched part of the master string 
-				masterStr = new StringBuilder(masterStr.toString().substring(lastMarkedPosition, masterStr.length()));
-				//move the buffer back 
-				bufferStringPosition = 0;
-				lastMarkedPosition = 0;	
+				reset();
+			}
+			//if next char is a space then we break 
+			if(nextCharString.equals(" ")){
+				reset();
+			}
+			
+			if(nextChar == -1){
+				return new Token(this.lineNum, this.charPos).EOF(this.lineNum, this.charPos);
 			}
 		}
 
 		//create a token of the last match
 		if(lastMatch == ""){
-			return new Token("EOF", this.lineNum, this.charPos);
+			//return new Token("EOF", this.lineNum, this.charPos);
 		}
+		
 		Token T = new Token(lastMatch, this.lineNum, this.charPos);
 		//reset last matched
 		lastMatch = "";
 		return T;
 	}
 
+	public void reset(){
+		if(masterStr.length() > 0)
+			go = false;
+		
+		//set char postion back to last place we match 
+		charPos = this.lastMarkedPosition;
+		//delete the matched part of the master string 
+		masterStr = new StringBuilder(masterStr.toString().substring(lastMarkedPosition, masterStr.length()));
+		//move the buffer back 
+		bufferStringPosition = 0;
+		lastMarkedPosition = 0;	
+	}
+	
 	@Override
 	public Iterator<Token> iterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	// OPTIONAL: any other methods that you find convenient for implementation or testing
 }
