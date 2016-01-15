@@ -117,7 +117,7 @@ public class Scanner implements Iterable<Token> {
 			}
 			
 			if(nextChar == -1){
-				return new Token(this.lineNum, this.charPos).EOF(this.lineNum, this.charPos);
+				return new Token(this.lineNum, this.charPos);
 			}
 		}
 
@@ -132,10 +132,10 @@ public class Scanner implements Iterable<Token> {
 		return T;
 	}
 
+	
 	public void reset(){
 		if(masterStr.length() > 0)
 			go = false;
-		
 		//set char postion back to last place we match 
 		charPos = this.lastMarkedPosition;
 		//delete the matched part of the master string 
