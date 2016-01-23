@@ -4,10 +4,12 @@ import java.io.Reader;
 import java.util.Iterator;
 
 public class Scanner implements Iterable<Token> {
+	//my information 
 	public static String studentName = "Kasean Herrera";
 	public static String studentID = "33531582";
 	public static String uciNetID = "kaseanh";
-	//String charMatches = "(|)|{|}|[|]|+|-|*|/|>|<|=|,|:";
+	
+
 	boolean go;
 	String charMatches = "([-()@'~%<>=:,/.=\\\"!/-;][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
 	String ignoreChars = "\n| ";
@@ -20,29 +22,24 @@ public class Scanner implements Iterable<Token> {
 	private String nextCharString; //char form of nect char
 	private Reader input;
 	private int bufferStringPosition;
-	
 	private int lastMarkedPosition;
 	
-	
+	//initialize the Scanner
 	Scanner(Reader reader)
 	{
-		//initialize the Scanner
 		this.lineNum  = 1;
 		this.input = reader;
 		updateLineNumber = false;
 		go = true;
 		masterStr = new StringBuilder();
-
 		this.lastMatch = "";
 		lastMarkedPosition = 0;
 		bufferStringPosition = 0;
-		
 	}	
 	
 	// OPTIONAL: helper function for reading a single char from input
 	//           can be used to catch and handle any IOExceptions,
 	//           advance the charPos or lineNum, etc.
-	
 	private int readChar() {
 		//if we are at the end of buffer , get char from file
 		if(bufferStringPosition == masterStr.toString().length()){
@@ -81,13 +78,10 @@ public class Scanner implements Iterable<Token> {
 		
 	}
 		
-
 	/* Invariants:
 	 *  1. call assumes that nextChar is already holding an unread character
 	 *  2. return leaves nextChar containing an untokenized character
 	 */
-	
-
 	public Token next()
 	{		
 		//get go 
@@ -132,7 +126,7 @@ public class Scanner implements Iterable<Token> {
 		return T;
 	}
 
-	
+	//resets the pointer and all variables when we a tokenize 
 	public void reset(){
 		if(masterStr.length() > 0)
 			go = false;
@@ -145,10 +139,11 @@ public class Scanner implements Iterable<Token> {
 		lastMarkedPosition = 0;	
 	}
 	
+	//must have for this class 
 	@Override
 	public Iterator<Token> iterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	// OPTIONAL: any other methods that you find convenient for implementation or testing
+	
 }

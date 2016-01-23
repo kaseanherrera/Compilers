@@ -1,5 +1,7 @@
 package crux;
 
+import crux.Token.Kind;
+
 public class Token {
 	//strings for regular expression matching 
 	private String stringMatch = "\\d+";
@@ -64,6 +66,7 @@ public class Token {
 			default_lexeme = lexeme;
 		}
 		
+	
 		public boolean hasStaticLexeme()
 		{
 			return default_lexeme != null;
@@ -147,5 +150,15 @@ public class Token {
 		str.append(this.kind.name()); //kind
 		str.append("(lineNum :" + this.lineNumber() + ", " + "charPos:" + this.charPos + ')'); //line number and postion 
 		return str.toString();
+	}
+
+	public String kind() {
+		// TODO Auto-generated method stub
+		return this.kind.name();
+	}
+
+	public boolean is(Kind kind2) {
+		
+		return kind2.name() == this.kind.name();
 	}
 }
