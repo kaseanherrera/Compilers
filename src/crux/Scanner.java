@@ -11,8 +11,8 @@ public class Scanner implements Iterable<Token> {
 	
 
 	boolean go;
-	String charMatches = "([-()@'~%<>=:,/.=\\\"!/-;][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
-	String ignoreChars = "\n| ";
+	String charMatches = "([-()@'~%<{}>=:,/.=\\\"!/-;][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
+	String ignoreChars = "\n|\\s";
 	public StringBuilder masterStr;
 	private String lastMatch; //tracks the last match that we had
 	boolean updateLineNumber;

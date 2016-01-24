@@ -108,6 +108,7 @@ public class Parser {
     
     private boolean have(NonTerminal nt)
     {
+    	
         return nt.firstSet().contains(currentToken.kind());
     }
 
@@ -146,7 +147,16 @@ public class Parser {
         throw new QuitParseException(errorMessage);
         //return false;
     }
-   
+    
+    private void error(NonTerminal nt){   
+    	String errorMessage = reportSyntaxError(nt);
+    	throw new QuitParseException(errorMessage);
+    }
+    
+    private void error(Token.Kind kind){
+    	 String errorMessage = reportSyntaxError(kind);
+         throw new QuitParseException(errorMessage);
+    }
 // Grammar Rules =====================================================
     
     // literal := INTEGER | FLOAT | TRUE | FALSE .
@@ -174,7 +184,7 @@ public class Parser {
     {
         enterRule(NonTerminal.PROGRAM);
         declerationList();
-       // expect(Token.Kind.EOF);
+        expect(Token.Kind.EOF);
         exitRule(NonTerminal.PROGRAM);
     }
     
@@ -186,11 +196,155 @@ public class Parser {
 		exitRule(NonTerminal.DECLARATION_LIST);
 	}
 
+    //declaration := variable-declaration | array-declaration | function-definition .
 	private void decleration() {
 		enterRule(NonTerminal.DECLARATION);
+		
+		if(this.currentToken.kind == Token.Kind.VAR){
+			variableDeclaration();
+		}
+		else if(this.currentToken.kind == Token.Kind.ARRAY){
+			arrayDeclaration();
+		}
+		else if(this.currentToken.kind == Token.Kind.FUNC){
+			functionDefinition();
+		}
+		else{
+			error(currentToken.kind);
+		}
+		
 		exitRule(NonTerminal.DECLARATION);
 		
 	}
+
+	//function-definition := "func" IDENTIFIER "(" parameter-list ")" ":" type statement-block .
+	private void functionDefinition() {
+		enterRule(NonTerminal.FUNCTION_DEFINITION);
+		expect(Token.Kind.FUNC);
+		expect(Token.Kind.IDENTIFIER);
+		expect(Token.Kind.OPEN_PAREN);
+		paramerterList();
+		expect(Token.Kind.CLOSE_PAREN);
+		expect(Token.Kind.COLON);
+		type();
+		statementBlock();
+		exitRule(NonTerminal.FUNCTION_DEFINITION);
+		
+	}
+
+	//statement-block := "{" statement-list "}"
+	private void statementBlock() {
+		// TODO Auto-generated method stub
+		enterRule(NonTerminal.STATEMENT_BLOCK);
+		expect(Token.Kind.OPEN_BRACE);
+		statementList();
+		expect(Token.Kind.CLOSE_BRACE);
+		exitRule(NonTerminal.STATEMENT_BLOCK);
+		
+	}
+
+	//statement-list := { statement } .
+	private void statementList() {
+		// TODO Auto-generated method stub
+
+		enterRule(NonTerminal.STATEMENT_LIST);
+		while(accept(NonTerminal.STATEMENT))
+			statement();
+		
+		exitRule(NonTerminal.STATEMENT_LIST);
+		
+	}
+
+	/*statement := variable-declaration
+           | call-statement
+           | assignment-statement
+           | if-statement
+           | while-statement
+           | return-statement . */
+	private void statement() {
+		// TODO Auto-generated method stub
+		enterRule(NonTerminal.STATEMENT);
+		if(this.currentToken.kind == Token.Kind.VAR)
+			this.variableDeclaration();
+		else if(this.currentToken.kind == Token.Kind.ASSIGN)
+			this.assignmentStatement();
+		else if(this.currentToken.kind == Token.Kind.IF)
+			this.ifStatement();
+		else if(this.currentToken.kind == Token.Kind.WHILE)
+			this.whileStatement();
+		else if(this.currentToken.kind == Token.Kind.RETURN)
+			this.returnStatement();
+		else
+			this.error(this.currentToken.kind);
+		exitRule(NonTerminal.STATEMENT);
+		
+	}
+
+	private void returnStatement() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void whileStatement() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void ifStatement() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void assignmentStatement() {
+		
+		
+	}
+
+	//type := IDENTIFIER .
+	private void type() {
+		enterRule(NonTerminal.TYPE);
+		expect(Token.Kind.IDENTIFIER);
+		exitRule(NonTerminal.TYPE);
+		
+	}
+	//parameter-list := [ parameter { "," parameter } ] .
+	private void paramerterList() {
+		// TODO Auto-generated method stub
+		enterRule(NonTerminal.PARAMETER_LIST);
+		if(currentToken.kind != Token.Kind.CLOSE_PAREN){
+			parameter();
+			while(accept(Token.Kind.COMMA))
+				parameter();
+		}
+		else
+			exitRule(NonTerminal.PARAMETER_LIST);
+	}
+
+	//parameter := IDENTIFIER ":" type .
+	private void parameter() {
+		enterRule(NonTerminal.PARAMETER);
+		expect(Token.Kind.IDENTIFIER);
+		expect(Token.Kind.COLON);
+		type();
+		exitRule(NonTerminal.PARAMETER);
+	}
+
+	private void arrayDeclaration() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//variable-declaration := "var" IDENTIFIER ":" type ";"
+	private void variableDeclaration() {
+		enterRule(NonTerminal.VARIABLE_DECLARATION);
+		expect(Token.Kind.VAR);
+		expect(Token.Kind.IDENTIFIER);
+		expect(Token.Kind.COLON);
+		type();
+		expect(Token.Kind.SEMICOLON);
+		exitRule(NonTerminal.VARIABLE_DECLARATION);
+	}
+
 
 	private void expression0() {
 		// TODO Auto-generated method stub

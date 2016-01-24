@@ -39,7 +39,7 @@ public class Token {
 		SUB("-"),
 		MUL("*"),
 		DIV("/"),
-		GREATER_THEN(">"),
+		GREATER_THAN(">"),
 		LESS_THAN("<"),
 		ASSIGN("="),
 		COMMA(","),
@@ -51,14 +51,17 @@ public class Token {
 		INTEGER(),
 		FLOAT(),
 		ERROR(),
-		EOF();
+		EOF(), 
+		GREATER_EQUAL(">="), 
+		NOT_EQUAL("!="),
+		LESSER_EQUAL("<=");
 		
 		private String default_lexeme;
 		
 		//constructor 
 		Kind()
 		{
-			default_lexeme = "";
+			this.default_lexeme = this.toString();
 		}
 		//constructor 
 		Kind(String lexeme)
@@ -96,6 +99,7 @@ public class Token {
 		//iterate through the values of the kind object, 
 		for(Kind k : Kind.values()){
 			if(k.default_lexeme.equals(lexeme2)){
+				System.out.println(k);
 				return k;
 			}
 		}
@@ -158,7 +162,6 @@ public class Token {
 	}
 
 	public boolean is(Kind kind2) {
-		
-		return kind2.name() == this.kind.name();
+		return kind2.name().equals(this.kind.name());
 	}
 }
