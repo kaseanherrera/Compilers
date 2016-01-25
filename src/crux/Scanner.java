@@ -11,7 +11,8 @@ public class Scanner implements Iterable<Token> {
 	
 
 	boolean go;
-	String charMatches = "([-()@'~%<{}>=:,/.=\\\"!/-;][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
+	String charMatches = "([-()@'~%<{}>=:,/.=\\\"!/-;\\[\\]+*][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
+	
 	String ignoreChars = "\n|\\s";
 	public StringBuilder masterStr;
 	private String lastMatch; //tracks the last match that we had
@@ -90,7 +91,7 @@ public class Scanner implements Iterable<Token> {
 			//get the next character 
 			readChar();
 			//check if the next char is one of the 'basic kinds' stop and tokenize
-			if((masterStr.toString()).matches(charMatches)){
+			if((masterStr.toString()).matches(charMatches) ){
 				//set the last match to the currentString
 				lastMatch = masterStr.toString();
 				//set the last match position 
@@ -110,9 +111,10 @@ public class Scanner implements Iterable<Token> {
 				reset();
 			}
 			
-			if(nextChar == -1){
+			/*if(nextChar == -1){
+				
 				return new Token(this.lineNum, this.charPos);
-			}
+			} */
 		}
 
 		//create a token of the last match

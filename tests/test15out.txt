@@ -1,7 +1,4 @@
-// nesting
-
-func main() : void {
-
+func main() : void {  
   while true {
     if false {
       if true {

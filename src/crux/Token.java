@@ -61,12 +61,12 @@ public class Token {
 		//constructor 
 		Kind()
 		{
-			this.default_lexeme = this.toString();
+			this.default_lexeme = "";
 		}
 		//constructor 
 		Kind(String lexeme)
 		{
-			default_lexeme = lexeme;
+			this.default_lexeme = lexeme;
 		}
 		
 	
@@ -99,7 +99,6 @@ public class Token {
 		//iterate through the values of the kind object, 
 		for(Kind k : Kind.values()){
 			if(k.default_lexeme.equals(lexeme2)){
-				System.out.println(k);
 				return k;
 			}
 		}
@@ -156,9 +155,9 @@ public class Token {
 		return str.toString();
 	}
 
-	public String kind() {
+	public Kind kind() {
 		// TODO Auto-generated method stub
-		return this.kind.name();
+		return this.kind;
 	}
 
 	public boolean is(Kind kind2) {
