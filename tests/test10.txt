@@ -1,4 +1,11 @@
-func foo(a:int, b:float, c:bool) : void {
-  ::gorn();
-}
+var gorn: int;
 
+func main() : void {
+  if (false) {
+    if (true) {
+      while (true) {
+        let gorn = 7;
+      }
+    }
+  }
+}

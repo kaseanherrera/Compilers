@@ -34,6 +34,7 @@ public enum NonTerminal {
         {
             addAll(OP0.firstSet);
             add(Token.Kind.INTEGER);
+            add(Token.Kind.IDENTIFIER);
         }
     }),
 

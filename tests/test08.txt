@@ -1,3 +1,6 @@
-func main() : type {
-  fib(7);
+func main() : void {
+  var laMbda : int;
+  var lambda : float;
+
+  ::println();
 }

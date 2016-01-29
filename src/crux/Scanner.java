@@ -1,7 +1,10 @@
 package crux;
+import java.awt.List;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Scanner implements Iterable<Token> {
 	//my information 
@@ -10,6 +13,7 @@ public class Scanner implements Iterable<Token> {
 	public static String uciNetID = "kaseanh";
 	
 
+	
 	boolean go;
 	String charMatches = "([-()@'~%<{}>=:,/.=\\\"!/-;\\[\\]+*][=:]?)|(?:\\d+)\\.?\\d*|[a-zA-Z]+|" ; //string that match basic characters
 	
@@ -28,6 +32,7 @@ public class Scanner implements Iterable<Token> {
 	//initialize the Scanner
 	Scanner(Reader reader)
 	{
+	
 		this.lineNum  = 1;
 		this.input = reader;
 		updateLineNumber = false;

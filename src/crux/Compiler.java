@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class Compiler {
-    public static String studentName = "TODO: kasean";
+    public static String studentName = "TODO: kasean herrera";
     public static String studentID = "TODO: 33531582";
     public static String uciNetID = "TODO: kaseanh";
     
@@ -29,7 +29,7 @@ public class Compiler {
             System.out.println(p.errorReport());
             System.exit(-3);
         }
-        System.out.println(p.parseTreeReport());
+        System.out.println("Crux program successfully parsed.");
     }
 }
     
